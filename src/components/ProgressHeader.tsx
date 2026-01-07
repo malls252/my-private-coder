@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { MealSchedule } from "@/types/meal";
-import { Flame, Target, TrendingUp } from "lucide-react";
+import { Flame, Target, TrendingUp, LogOut } from "lucide-react";
+import { useAuth } from "@/components/auth/AuthContext";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface ProgressHeaderProps {
   meals: MealSchedule[];
@@ -13,6 +16,13 @@ export function ProgressHeader({
   totalCalories,
   completedCalories,
 }: ProgressHeaderProps) {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Berhasil keluar");
+  };
+
   const completedCount = useMemo(
     () => meals.filter((m) => m.isCompleted).length,
     [meals]
@@ -24,7 +34,7 @@ export function ProgressHeader({
   );
 
   return (
-    <div className="glass-card rounded-2xl p-5 mb-6 animate-fade-in">
+    <div className="glass-card rounded-2xl p-5 mb-6 animate-fade-in relative">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-extrabold text-foreground">
@@ -38,9 +48,19 @@ export function ProgressHeader({
             })}
           </p>
         </div>
-        <div className="flex items-center gap-1 bg-accent/10 text-accent px-3 py-1.5 rounded-full">
-          <Flame className="w-4 h-4" />
-          <span className="font-bold text-sm">{totalCalories}</span>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-accent/10 text-accent px-3 py-1.5 rounded-full">
+            <Flame className="w-4 h-4" />
+            <span className="font-bold text-sm">{totalCalories}</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
