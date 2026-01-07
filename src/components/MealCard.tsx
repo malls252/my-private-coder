@@ -1,11 +1,12 @@
 import { MealSchedule } from "@/types/meal";
-import { Check, Bell, BellOff, Clock } from "lucide-react";
+import { Check, Bell, BellOff, Clock, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MealCardProps {
   meal: MealSchedule;
   onToggleComplete: (id: string) => void;
   onToggleAlarm: (id: string) => void;
+  onEdit: (meal: MealSchedule) => void;
   index: number;
 }
 
@@ -13,6 +14,7 @@ export function MealCard({
   meal,
   onToggleComplete,
   onToggleAlarm,
+  onEdit,
   index,
 }: MealCardProps) {
   const totalCalories = meal.items.reduce(
@@ -41,6 +43,14 @@ export function MealCard({
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => onEdit(meal)}
+            className="p-2 rounded-full transition-all bg-muted text-muted-foreground hover:bg-secondary"
+            aria-label="Edit jadwal"
+          >
+            <Pencil className="w-4 h-4" />
+          </button>
+
           <button
             onClick={() => onToggleAlarm(meal.id)}
             className={cn(

@@ -40,6 +40,12 @@ export function useMealSchedule() {
     );
   };
 
+  const updateMeal = (updatedMeal: MealSchedule) => {
+    setMeals((prev) =>
+      prev.map((meal) => (meal.id === updatedMeal.id ? updatedMeal : meal))
+    );
+  };
+
   const resetDaily = () => {
     setMeals((prev) =>
       prev.map((meal) => ({ ...meal, isCompleted: false }))
@@ -71,6 +77,7 @@ export function useMealSchedule() {
     isLoaded,
     toggleComplete,
     toggleAlarm,
+    updateMeal,
     resetDaily,
     getTotalCalories,
     getCompletedCalories,

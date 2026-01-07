@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useMealSchedule } from "@/hooks/useMealSchedule";
 import { useAlarm } from "@/hooks/useAlarm";
 import { MealCard } from "@/components/MealCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { ActionButtons } from "@/components/ActionButtons";
+import { EditMealDialog } from "@/components/EditMealDialog";
+import { MealSchedule } from "@/types/meal";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -11,12 +14,25 @@ const Index = () => {
     isLoaded,
     toggleComplete,
     toggleAlarm,
+    updateMeal,
     resetDaily,
     getTotalCalories,
     getCompletedCalories,
   } = useMealSchedule();
 
+  const [editingMeal, setEditingMeal] = useState<MealSchedule | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   useAlarm(meals);
+
+  const handleEdit = (meal: MealSchedule) => {
+    setEditingMeal(meal);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveMeal = (updatedMeal: MealSchedule) => {
+    updateMeal(updatedMeal);
+  };
 
   const handleTestAlarm = () => {
     if ("Notification" in window) {
@@ -71,12 +87,20 @@ const Index = () => {
               index={index}
               onToggleComplete={toggleComplete}
               onToggleAlarm={toggleAlarm}
+              onEdit={handleEdit}
             />
           ))}
         </div>
       </div>
 
       <ActionButtons onReset={handleReset} onTestAlarm={handleTestAlarm} />
+
+      <EditMealDialog
+        meal={editingMeal}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSave={handleSaveMeal}
+      />
     </main>
   );
 };
