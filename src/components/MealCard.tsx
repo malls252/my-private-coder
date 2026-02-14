@@ -25,36 +25,38 @@ export function MealCard({
   return (
     <div
       className={cn(
-        "glass-card rounded-2xl p-4 transition-all duration-300 animate-slide-up",
+        "glass-card rounded-2xl p-3 sm:p-4 transition-all duration-300 animate-slide-up",
         meal.isCompleted && "opacity-60"
       )}
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{meal.icon}</span>
-          <div>
-            <h3 className="font-bold text-lg text-foreground">{meal.title}</h3>
-            <div className="flex items-center gap-1 text-muted-foreground text-sm">
-              <Clock className="w-3.5 h-3.5" />
+
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <span className="text-2xl sm:text-3xl flex-shrink-0">{meal.icon}</span>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-bold text-base sm:text-lg text-foreground truncate">{meal.title}</h3>
+            <div className="flex items-center gap-1 text-muted-foreground text-xs sm:text-sm">
+              <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               <span>{meal.time}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+
           <button
             onClick={() => onEdit(meal)}
-            className="p-2 rounded-full transition-all bg-muted text-muted-foreground hover:bg-secondary"
+            className="p-1.5 sm:p-2 rounded-full transition-all bg-muted text-muted-foreground hover:bg-secondary touch-manipulation"
             aria-label="Edit jadwal"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
           <button
             onClick={() => onToggleAlarm(meal.id)}
             className={cn(
-              "p-2 rounded-full transition-all",
+              "p-1.5 sm:p-2 rounded-full transition-all touch-manipulation",
               meal.alarmEnabled
                 ? "bg-accent text-accent-foreground"
                 : "bg-muted text-muted-foreground"
@@ -62,40 +64,41 @@ export function MealCard({
             aria-label={meal.alarmEnabled ? "Matikan alarm" : "Nyalakan alarm"}
           >
             {meal.alarmEnabled ? (
-              <Bell className="w-4 h-4" />
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             ) : (
-              <BellOff className="w-4 h-4" />
+              <BellOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             )}
           </button>
 
           <button
             onClick={() => onToggleComplete(meal.id)}
             className={cn(
-              "p-2 rounded-full transition-all btn-primary-glow",
+              "p-1.5 sm:p-2 rounded-full transition-all btn-primary-glow touch-manipulation",
               meal.isCompleted
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground"
             )}
             aria-label={meal.isCompleted ? "Batalkan selesai" : "Tandai selesai"}
           >
-            <Check className="w-4 h-4" />
+            <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
+
         </div>
       </div>
 
-      <div className="space-y-2 mb-3">
+      <div className="space-y-1.5 sm:space-y-2 mb-3">
         {meal.items.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between text-sm py-1.5 px-3 bg-secondary/50 rounded-lg"
+            className="flex items-center justify-between text-xs sm:text-sm py-1 sm:py-1.5 px-2 sm:px-3 bg-secondary/50 rounded-lg"
           >
-            <span className={cn(meal.isCompleted && "line-through")}>
+            <span className={cn("truncate mr-2", meal.isCompleted && "line-through")}>
               {item.name}
             </span>
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <span>{item.portion}</span>
+            <div className="flex items-center gap-2 sm:gap-3 text-muted-foreground flex-shrink-0">
+              <span className="hidden xs:inline">{item.portion}</span>
               {item.calories && (
-                <span className="text-primary font-medium">
+                <span className="text-primary font-medium whitespace-nowrap">
                   {item.calories} kal
                 </span>
               )}
@@ -104,10 +107,12 @@ export function MealCard({
         ))}
       </div>
 
+
       <div className="flex items-center justify-between pt-2 border-t border-border">
-        <span className="text-sm text-muted-foreground">Total Kalori</span>
-        <span className="font-bold text-primary">{totalCalories} kal</span>
+        <span className="text-xs sm:text-sm text-muted-foreground">Total Kalori</span>
+        <span className="font-bold text-primary text-sm sm:text-base">{totalCalories} kal</span>
       </div>
+
     </div>
   );
 }

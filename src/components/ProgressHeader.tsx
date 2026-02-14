@@ -36,13 +36,13 @@ export function ProgressHeader({
   );
 
   return (
-    <div className="glass-card rounded-2xl p-5 mb-6 animate-fade-in relative">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-foreground">
+    <div className="glass-card rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6 animate-fade-in relative">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-foreground truncate">
             Jadwal Bulking 💪
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-xs sm:text-sm">
             {new Date().toLocaleDateString("id-ID", {
               weekday: "long",
               day: "numeric",
@@ -50,7 +50,8 @@ export function ProgressHeader({
             })}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+
           {onViewProgress && (
             <Button
               variant="ghost"
@@ -62,10 +63,11 @@ export function ProgressHeader({
               <BarChart3 className="w-4 h-4" />
             </Button>
           )}
-          <div className="flex items-center gap-1 bg-accent/10 text-accent px-3 py-1.5 rounded-full">
-            <Flame className="w-4 h-4" />
-            <span className="font-bold text-sm">{totalCalories}</span>
+          <div className="flex items-center gap-1 bg-accent/10 text-accent px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
+            <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="font-bold text-xs sm:text-sm">{totalCalories}</span>
           </div>
+
           <Button
             variant="ghost"
             size="icon"
@@ -77,41 +79,43 @@ export function ProgressHeader({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-secondary rounded-xl p-3 text-center">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
+        <div className="bg-secondary rounded-xl p-2 sm:p-3 text-center">
           <div className="flex items-center justify-center gap-1 text-primary mb-1">
-            <Target className="w-4 h-4" />
+            <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <p className="text-xl font-bold text-foreground">{meals.length}</p>
-          <p className="text-xs text-muted-foreground">Jadwal</p>
+          <p className="text-lg sm:text-xl font-bold text-foreground">{meals.length}</p>
+          <p className="text-[10px] sm:text-xs text-muted-foreground">Jadwal</p>
         </div>
-        <div className="bg-secondary rounded-xl p-3 text-center">
+        <div className="bg-secondary rounded-xl p-2 sm:p-3 text-center">
           <div className="flex items-center justify-center gap-1 text-primary mb-1">
-            <TrendingUp className="w-4 h-4" />
+            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <p className="text-xl font-bold text-foreground">{completedCount}</p>
-          <p className="text-xs text-muted-foreground">Selesai</p>
+          <p className="text-lg sm:text-xl font-bold text-foreground">{completedCount}</p>
+          <p className="text-[10px] sm:text-xs text-muted-foreground">Selesai</p>
         </div>
-        <div className="bg-secondary rounded-xl p-3 text-center">
+        <div className="bg-secondary rounded-xl p-2 sm:p-3 text-center">
           <div className="flex items-center justify-center gap-1 text-accent mb-1">
-            <Flame className="w-4 h-4" />
+            <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
-          <p className="text-xl font-bold text-foreground">{completedCalories}</p>
-          <p className="text-xs text-muted-foreground">Kalori</p>
+          <p className="text-lg sm:text-xl font-bold text-foreground">{completedCalories}</p>
+          <p className="text-[10px] sm:text-xs text-muted-foreground">Kalori</p>
         </div>
       </div>
 
+
       <div className="relative">
-        <div className="h-3 bg-secondary rounded-full overflow-hidden">
+        <div className="h-2.5 sm:h-3 bg-secondary rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        <p className="text-center text-xs text-muted-foreground mt-2">
+        <p className="text-center text-[10px] sm:text-xs text-muted-foreground mt-1.5 sm:mt-2">
           {progressPercent.toFixed(0)}% target harian tercapai
         </p>
       </div>
+
     </div>
   );
 }

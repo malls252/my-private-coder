@@ -2,7 +2,14 @@ import { useEffect, useCallback, useRef } from "react";
 import { MealSchedule } from "@/types/meal";
 import { toast } from "sonner";
 
+declare global {
+  interface Window {
+    OneSignal?: any;
+  }
+}
+
 export function useAlarm(meals: MealSchedule[]) {
+
   const notifiedRef = useRef<Set<string>>(new Set());
   const lastCheckRef = useRef<number>(Date.now());
 
@@ -18,7 +25,7 @@ export function useAlarm(meals: MealSchedule[]) {
     try {
       // Use a slightly longer simpler beep or reuse the base64
       // Short beep for now, can be replaced with a real file in public/
-      const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleR0BW6r67YVqJy2FuNDFhV0lJIa/2cuJOBMIf8DdqnoqIX2xvpuIcmRhc4mcnIBnS0BbiKeOgWtYTl2ClJB9ZlROXYKTj3xlU09ggpSQfWVUUF+ClI97ZlVQYIKTjnxmVVBfgpOOe2dVT1+Ck457aFVPX4KSjXtoVU9fgpKNe2hVT1+Cko17aFVPX4KSjXtoVU9fg5KNe2hVT16Dko17aFZPXoOSjXtoVk9eg5KNe2hWT16Dko17aFZPXoOSjXtoVU9eg5ONfGhVT12Dko18aFVPXYOSjXxpVU9dg5KNfGlUT1yDko18aVRPXIOSjHxpVE9cg5KMfGpUT1yDkox8alRPW4OSjHxqVE9bg5KMfGtUT1uDkox8a1RPW4OSjHxrU09bg5KMfGtTT1qEkox8a1NPWoSSjHxrU09ahJKMfGtTT1qEkox8a1NPWoSRi3xrU09ahJGLfGtTT1qEkYt8a1NPWoSRi3xrU09ahJGLfGtTT1qEkYt8bFNPWoSRi31sU09ahJGLfWxTT1qEkYt9bFNPWoSRi31sU09ahJGLfWxTT1qEkYt9bFNPWoSRin1sU09ahZGKfWxTT1mFkYp9bFNPWYWRin1sU09ZhZGKfWxTT1mFkYp9bFNPWYWRin1sU09ZhZGKfWxTT1mFkYp+bFNPWYWRin5sU09ZhZGKfmxTT1mFkYp+bFNPWYWQin5sU09ZhZCKfmxTT1mFkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWQ==");
+      const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleR0BW6r67YVqJy2FuNDFhV0lJIa/2cuJOBMIf8DdqnoqIX2xvpuIcmRhc4mcnIBnS0BbiKeOgWtYTl2ClJB9ZlROXYKTj3xlU09ggpSQfWVUUF+ClI97ZlVQYIKTjnxmVVBfgpOOe2dVT1+Ck457aFVPX4KSjXtoVU9fgpKNe2hVT1+Cko17aFVPX4KSjXtoVU9fg5KNe2hVT16Dko17aFZPXoOSjXtoVk9eg5KNe2hWT16Dko17aFZPXoOSjXtoVU9eg5ONfGhVT12Dko18aFVPXYOSjXxpVU9dg5KNfGlUT1yDko18aVRPXIOSjHxpVE9cg5KMfGpUT1yDkox8alRPW4OSjHxqVE9bg5KMfGtUT1uDkox8a1RPW4OSjHxrU09bg5KMfGtTT1qEkox8a1NPWoSSjHxrU09ahJKMfGtTT1qEkox8a1NPWoSRi3xrU09ahJGLfGtTT1qEkYt8a1NPWoSRi3xrU09ahJGLfWxTT1qEkYt9bFNPWoSRi31sU09ahJGLfWxTT1qEkYt9bFNPWoSRi31sU09ahJGLfWxTT1qEkYt9bFNPWoSRin1sU09ahZGKfWxTT1mFkYp9bFNPWYWRin1sU09ZhZGKfWxTT1mFkYp9bFNPWYWRin1sU09ZhZGKfWxTT1mFkYp+bFNPWYWRin5sU09ZhZGKfmxTT1mFkYp+bFNPWYWQin5sU09ZhZCKfmxTT1mFkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWYaQiX5sU09ZhpCJfmxTT1mGkIl+bFNPWQ==");
       audio.volume = 1.0;
       audio.play().catch(e => console.error("Audio play failed", e));
 
@@ -31,6 +38,44 @@ export function useAlarm(meals: MealSchedule[]) {
     }
   };
 
+  // Send OneSignal push notification
+  const sendOneSignalNotification = useCallback(async (meal: MealSchedule) => {
+    try {
+      const OneSignal = window.OneSignal;
+      if (!OneSignal) {
+        console.log("OneSignal not available");
+        return;
+      }
+
+      // Check if user is subscribed
+      const isSubscribed = await OneSignal.isPushNotificationsEnabled();
+      if (!isSubscribed) {
+        console.log("User not subscribed to push notifications");
+        return;
+      }
+
+      // Send notification using OneSignal API
+      // Note: This requires server-side implementation for production
+      // For now, we use the client-side notification
+      await OneSignal.sendSelfNotification(
+        `Waktunya ${meal.title}! 🍽️`,
+        `${meal.items.map((i) => i.name).join(", ")} - Jangan lupa makan!`,
+        "/", // URL to open when clicked
+        "/favicon.ico", // Icon
+        {
+          mealId: meal.id,
+          mealTitle: meal.title,
+          timestamp: new Date().toISOString(),
+        }
+      );
+      
+      console.log("OneSignal notification sent for:", meal.title);
+    } catch (error) {
+      console.error("Error sending OneSignal notification:", error);
+    }
+  }, []);
+
+
   const showNotification = useCallback(async (meal: MealSchedule) => {
     const message = `Waktunya ${meal.title}! 🍽️`;
     const options: NotificationOptions = {
@@ -39,8 +84,8 @@ export function useAlarm(meals: MealSchedule[]) {
       tag: meal.id,
       requireInteraction: true, // Important for persistence on desktop
       data: { url: "/" },
-      vibrate: [200, 100, 200],
-    };
+    } as NotificationOptions;
+
 
     // 1. Show Toast inside App
     toast(message, {
@@ -61,7 +106,11 @@ export function useAlarm(meals: MealSchedule[]) {
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification(message, options);
     }
-  }, []);
+
+    // 4. OneSignal Push Notification
+    sendOneSignalNotification(meal);
+  }, [sendOneSignalNotification]);
+
 
   useEffect(() => {
     requestNotificationPermission();

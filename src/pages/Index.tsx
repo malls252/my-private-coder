@@ -95,8 +95,9 @@ const Index = () => {
   }
 
   return (
-    <main className="min-h-screen bg-background pb-24">
-      <div className="max-w-md mx-auto px-4 py-6">
+    <main className="min-h-screen bg-background pb-32 sm:pb-28">
+      <div className="w-full max-w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+
         <ProgressHeader
           meals={meals}
           totalCalories={getTotalCalories()}
