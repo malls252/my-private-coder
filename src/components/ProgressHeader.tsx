@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { MealSchedule } from "@/types/meal";
-import { Flame, Target, TrendingUp, LogOut } from "lucide-react";
+import { Flame, Target, TrendingUp, LogOut, BarChart3 } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -9,12 +9,14 @@ interface ProgressHeaderProps {
   meals: MealSchedule[];
   totalCalories: number;
   completedCalories: number;
+  onViewProgress?: () => void;
 }
 
 export function ProgressHeader({
   meals,
   totalCalories,
   completedCalories,
+  onViewProgress,
 }: ProgressHeaderProps) {
   const { logout } = useAuth();
 
@@ -49,6 +51,17 @@ export function ProgressHeader({
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {onViewProgress && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary"
+              onClick={onViewProgress}
+              aria-label="Lihat progress"
+            >
+              <BarChart3 className="w-4 h-4" />
+            </Button>
+          )}
           <div className="flex items-center gap-1 bg-accent/10 text-accent px-3 py-1.5 rounded-full">
             <Flame className="w-4 h-4" />
             <span className="font-bold text-sm">{totalCalories}</span>

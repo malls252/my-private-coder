@@ -1,12 +1,23 @@
 import { useState } from "react";
 import { useMealSchedule } from "@/hooks/useMealSchedule";
 import { useAlarm } from "@/hooks/useAlarm";
+import { useProgressHistory } from "@/hooks/useProgressHistory";
+import { useBodyProgress } from "@/hooks/useBodyProgress";
 import { MealCard } from "@/components/MealCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
+import { ProgressView } from "@/components/ProgressView";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditMealDialog } from "@/components/EditMealDialog";
+import { BodyProgressDialog } from "@/components/BodyProgressDialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { MealSchedule } from "@/types/meal";
 import { toast } from "sonner";
+
 
 const Index = () => {
   const {
@@ -20,10 +31,31 @@ const Index = () => {
     getCompletedCalories,
   } = useMealSchedule();
 
+  const {
+    addProgress,
+    getLast7Days,
+    getStreak,
+    getWeeklyStats,
+  } = useProgressHistory();
+
   const [editingMeal, setEditingMeal] = useState<MealSchedule | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [progressSheetOpen, setProgressSheetOpen] = useState(false);
+  const [bodyProgressDialogOpen, setBodyProgressDialogOpen] = useState(false);
+
+  const {
+    progress: bodyProgress,
+    addWeight,
+    addPhoto,
+    setGoal,
+    deleteWeight,
+    deletePhoto,
+    getLatestWeight,
+  } = useBodyProgress();
 
   useAlarm(meals);
+
+
 
   const handleEdit = (meal: MealSchedule) => {
     setEditingMeal(meal);
@@ -34,31 +66,23 @@ const Index = () => {
     updateMeal(updatedMeal);
   };
 
-  const handleTestAlarm = () => {
-    if ("Notification" in window) {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          toast.success("🔔 Alarm aktif!", {
-            description: "Kamu akan menerima notifikasi saat waktu makan tiba",
-          });
-          
-          new Notification("Test Alarm Bulking 💪", {
-            body: "Notifikasi berfungsi dengan baik!",
-            icon: "/favicon.ico",
-          });
-        } else {
-          toast.error("Izinkan notifikasi untuk mengaktifkan alarm", {
-            description: "Buka pengaturan browser untuk mengizinkan notifikasi",
-          });
-        }
+  const handleReset = () => {
+
+    const total = getTotalCalories();
+    const completed = getCompletedCalories();
+    const completedCount = meals.filter((m) => m.isCompleted).length;
+    if (total > 0 || completedCount > 0) {
+      addProgress({
+        date: new Date().toISOString().slice(0, 10),
+        completedCalories: completed,
+        totalCalories: total,
+        completedMeals: completedCount,
+        totalMeals: meals.length,
       });
     }
-  };
-
-  const handleReset = () => {
     resetDaily();
     toast.success("✨ Jadwal direset", {
-      description: "Semua jadwal makan kembali ke awal",
+      description: "Progress hari ini tersimpan. Semua jadwal makan kembali ke awal",
     });
   };
 
@@ -77,6 +101,7 @@ const Index = () => {
           meals={meals}
           totalCalories={getTotalCalories()}
           completedCalories={getCompletedCalories()}
+          onViewProgress={() => setProgressSheetOpen(true)}
         />
 
         <div className="space-y-4">
@@ -93,15 +118,64 @@ const Index = () => {
         </div>
       </div>
 
-      <ActionButtons onReset={handleReset} onTestAlarm={handleTestAlarm} />
+      <ActionButtons 
+        onReset={handleReset} 
+        onOpenBodyProgress={() => setBodyProgressDialogOpen(true)}
+      />
+
+      <BodyProgressDialog
+        open={bodyProgressDialogOpen}
+        onOpenChange={setBodyProgressDialogOpen}
+        onAddWeight={addWeight}
+        onAddPhoto={addPhoto}
+        onSetGoal={setGoal}
+        existingGoal={bodyProgress.goal}
+        latestWeight={getLatestWeight()?.weight || null}
+      />
 
       <EditMealDialog
+
         meal={editingMeal}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         onSave={handleSaveMeal}
       />
+
+      <Sheet open={progressSheetOpen} onOpenChange={setProgressSheetOpen}>
+        <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl">
+          <SheetHeader>
+            <SheetTitle>Progress Bulking 💪</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6 overflow-y-auto pb-8">
+            <ProgressView
+              last7Days={getLast7Days()}
+              todayLive={{
+                completedCalories: getCompletedCalories(),
+                totalCalories: getTotalCalories(),
+                progressPercent:
+                  getTotalCalories() > 0
+                    ? Math.round((getCompletedCalories() / getTotalCalories()) * 100)
+                    : 0,
+                completedMeals: meals.filter((m) => m.isCompleted).length,
+                totalMeals: meals.length,
+              }}
+              streak={getStreak(
+                getTotalCalories() > 0
+                  ? Math.round((getCompletedCalories() / getTotalCalories()) * 100)
+                  : 0
+              )}
+              weeklyStats={getWeeklyStats()}
+              bodyProgress={bodyProgress}
+              onDeleteWeight={deleteWeight}
+              onDeletePhoto={deletePhoto}
+            />
+
+          </div>
+        </SheetContent>
+      </Sheet>
+
     </main>
+
   );
 };
 

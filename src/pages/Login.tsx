@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
-import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 const Login = () => {
     const [pin, setPin] = useState("");
@@ -25,7 +24,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-background px-4">
             <Card className="w-full max-w-sm">
                 <CardHeader className="text-center">
                     <div className="mx-auto bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4">
@@ -51,8 +50,6 @@ const Login = () => {
                             Unlock
                         </Button>
                     </form>
-
-                    <InstallPrompt />
                 </CardContent>
             </Card>
         </div>

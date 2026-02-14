@@ -35,7 +35,7 @@ export function useAlarm(meals: MealSchedule[]) {
     const message = `Waktunya ${meal.title}! 🍽️`;
     const options: NotificationOptions = {
       body: `${meal.items.map((i) => i.name).join(", ")} - Jangan lupa makan!`,
-      icon: "/pwa-192x192.png", // Use PWA icon
+      icon: "/favicon.ico",
       tag: meal.id,
       requireInteraction: true, // Important for persistence on desktop
       data: { url: "/" },
@@ -57,19 +57,7 @@ export function useAlarm(meals: MealSchedule[]) {
     // 2. Play Sound immediately
     playSound();
 
-    // 3. System Notification (Service Worker or Classic)
-    if ("serviceWorker" in navigator && navigator.serviceWorker.ready) {
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        // Service Worker notification is more reliable on Android
-        await registration.showNotification(message, options);
-        return;
-      } catch (e) {
-        console.error("SW notification failed", e);
-      }
-    }
-
-    // Fallback to classic Notification API
+    // 3. System Notification (classic Notification API)
     if ("Notification" in window && Notification.permission === "granted") {
       new Notification(message, options);
     }

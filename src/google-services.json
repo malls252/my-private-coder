@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "449981487795",
+    "project_id": "bulking-app-7f928",
+    "storage_bucket": "bulking-app-7f928.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449981487795:android:bd5fd948a366e2cb066ec6",
+        "android_client_info": {
+          "package_name": "com.bulkingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUK52UjHu_bh6xK83pioASkngL-Zg522M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
