@@ -68,8 +68,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Initial Check
   useEffect(() => {
-    checkSession();
-    setIsLoading(false);
+    try {
+      checkSession();
+    } catch (error) {
+      console.error("Auth initialization error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [checkSession]);
 
   // Activity Listeners
